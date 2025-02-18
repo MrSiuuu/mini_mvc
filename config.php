@@ -3,3 +3,5 @@ define("_BOOKS_IMAGES_FOLDER_", "/uploads/books/");
 define("_ASSETS_IMAGES_FOLDER_", "/assets/images/");
 define("_HOME_BOOK_LIMIT_", 3);
 define("_ITEM_PER_PAGE_", 9);
+define('_ASSETS_PATH_', '/mini_mvc/assets');
+define("_BASE_URL_", "http://localhost/mini_mvc");

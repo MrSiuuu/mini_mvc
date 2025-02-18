@@ -72,9 +72,7 @@ class User extends Entity
         return $this;
     }
 
-    /*
-        Pourrait être déplacé dans une classe UserValidator
-    */
+
     public function validate(): array
     {
         $errors = [];
@@ -95,9 +93,7 @@ class User extends Entity
         return $errors;
     }
 
-    /*
-        Pourrait être déplacé dans une classe Security
-    */
+
     public function verifyPassword(string $password): bool
     {
         if (password_verify($password, $this->password)) {
@@ -107,26 +103,20 @@ class User extends Entity
         }
     }
 
-    /*
-        Pourrait être déplacé dans une classe Security
-    */
+
     public static function isLogged(): bool
     {
         return isset($_SESSION['user']);
     }
 
 
-    /*
-        Pourrait être déplacé dans une classe Security
-    */
+
     public static function isUser(): bool
     {
         return isset($_SESSION['user']);
     }
 
-    /*
-        Pourrait être déplacé dans une classe Security
-    */
+
     public static function getCurrentUserId(): int|bool
     {
         return (isset($_SESSION['user']) && isset($_SESSION['user']['id'])) ? $_SESSION['user']['id']: false;

@@ -33,28 +33,50 @@ class UserController extends Controller
         }
     }
   
-    protected function register()
+    public function register()
     {
-        try {
-            $errors = [];
-            $user = new User();
-
-            if (isset($_POST['saveUser'])) {
-                //@todo gérer l'inscription utilisateur
+        $errors = [];
+        
+        if (isset($_POST['saveUser'])) {
+            if (empty($_POST['first_name'])) {
+                $errors[] = "Le prénom est obligatoire";
+            }
+            if (empty($_POST['last_name'])) {
+                $errors[] = "Le nom est obligatoire";
+            }
+            if (empty($_POST['email'])) {
+                $errors[] = "L'email est obligatoire";
+            }
+            if (empty($_POST['password'])) {
+                $errors[] = "Le mot de passe est obligatoire";
             }
 
-            $this->render('user/add_edit', [
-                'user' => '',
-                'pageTitle' => 'Inscription',
-                'errors' => ''
-            ]);
+            if (empty($errors)) {
+                $userRepository = new UserRepository();
+                
+                if ($userRepository->findOneByEmail($_POST['email'])) {
+                    $errors[] = "Cet email est déjà utilisé";
+                } else {
+                    $user = new User();
+                    $user->setFirstName($_POST['first_name'])
+                         ->setLastName($_POST['last_name'])
+                         ->setEmail($_POST['email'])
+                         ->setPassword(password_hash($_POST['password'], PASSWORD_DEFAULT));
 
-        } catch (\Exception $e) {
-            $this->render('errors/default', [
-                'error' => $e->getMessage()
-            ]);
-        } 
+                    if ($userRepository->add($user)) {
+                        header('Location: index.php?controller=auth&action=login');
+                        exit;
+                    } else {
+                        $errors[] = "Erreur lors de l'inscription";
+                    }
+                }
+            }
+        }
 
+        $this->render('user/add_edit', [
+            'errors' => $errors,
+            'pageTitle' => 'Inscription'
+        ]);
     }
 
 }
